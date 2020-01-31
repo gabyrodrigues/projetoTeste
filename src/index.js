@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+
 import { enableScreens } from 'react-native-screens';
 
 enableScreens();
 
 
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
+
+import './config/ReactotronConfig';
 
 import Routes from './routes';
 
@@ -20,10 +23,12 @@ const styles = StyleSheet.create({
   },
 });
 
+// console.tron.warn("e aí!");
+
 export default function App() {
     return (
         <>
-        <StatusBar hidden={true} barStyle="light-content" backgroundColor="#7159c1" />
+        <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
         <Routes />
         </>
     );

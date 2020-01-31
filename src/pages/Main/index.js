@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
 import { Container, Form, Input, SubmitButton } from './styles';
+
+import api from '../../services/api'; //acessando api do github
 
 export default class Main extends Component {
     state = {
@@ -11,7 +12,7 @@ export default class Main extends Component {
     };
 
     handleAddUser = () => {
-
+        console.tron.log(this.state.newUser);
     }
 
     render () {
@@ -25,8 +26,10 @@ export default class Main extends Component {
                      placeholder="Adicionar usuário"
                      value={newUser}
                      onChangeText={text => this.setState({ newUser: text })}
+                     returnKeyType="send"
+                     onSubmitEditing={this.handleAddUser}
                     />
-                    <SubmitButton>
+                    <SubmitButton onPress={this.handleAddUser}>
                         <Icon name="add" size={20} color="#fff" />
                     </SubmitButton>
                 </Form>
