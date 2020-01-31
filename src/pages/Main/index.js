@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Keyboard, ActivityIndicator } from 'react-native'; //importa a api de teclado do react-native //activeIndicator é o sinal de loading
+import AsyncStorage from '@react-native-community/async-storage'; //guarda os dados na storage do celular para os dados continuarem lá ao voltar/sair do app
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Container, Form, Input, 
@@ -9,6 +10,7 @@ import { Container, Form, Input,
         } from './styles';
 
 import api from '../../services/api'; //acessando api do github
+import { of } from 'rxjs';
 
 export default class Main extends Component {
     state = {
@@ -16,6 +18,22 @@ export default class Main extends Component {
         users: [],
         loading: false
     };
+
+    async componentDidMount() { //busca os dados
+        const users = await AsyncStorage.getItem('users');
+
+        if(users) {
+            this.setState({users: JSON.parse(users)});
+        }
+    }
+
+    componentDidUpdate(_, prevState) { //executa quando houver alterações na variável users
+        const { users } = this.state;
+
+        if(prevState.users !== users) {
+            AsyncStorage.setItem('users', JSON.stringify(users));
+        }
+    }
 
     handleAddUser = async () => { //await é assincrono
         // console.tron.log(this.state.newUser);
