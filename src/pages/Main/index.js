@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Keyboard } from 'react-native'; //importa a api de teclado do react-native
+import { Keyboard, ActivityIndicator } from 'react-native'; //importa a api de teclado do react-native //activeIndicator é o sinal de loading
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Container, Form, Input, 
@@ -13,12 +13,15 @@ import api from '../../services/api'; //acessando api do github
 export default class Main extends Component {
     state = {
         newUser: '',
-        users: []
+        users: [],
+        loading: false
     };
 
     handleAddUser = async () => { //await é assincrono
         // console.tron.log(this.state.newUser);
         const { users, newUser } = this.state; //para add um novo item na lista precisa da referência dos itens anteriores
+
+        this.setState({ loading: true })
 
         /* conexão com a api */
         const response = await api.get(`/users/${newUser}`); //rota
@@ -32,14 +35,15 @@ export default class Main extends Component {
 
         this.setState({
             users: [ ...users, data ], //copia todos os usuários que estão dentro do estado (na array de users) e colocar os dados (data)
-            newUser: '' //pega o valor do input e reseta
+            newUser: '', //pega o valor do input e reseta
+            loading: false
         });
 
         Keyboard.dismiss();
     }
 
     render () {
-        const { users, newUser } = this.state;
+        const { users, newUser, loading } = this.state;
         
         return (
 
@@ -54,8 +58,12 @@ export default class Main extends Component {
                     returnKeyType="send"
                     onSubmitEditing={this.handleAddUser}
                     />
-                    <SubmitButton onPress={this.handleAddUser}>
-                        <Icon name="add" size={20} color="#fff" />
+                    <SubmitButton loading={loading} onPress={this.handleAddUser}>
+                        { loading ? ( 
+                            <ActivityIndicator color="#fff" /> 
+                        ) : ( 
+                            <Icon name="add" size={20} color="#fff" /> 
+                        )}
                     </SubmitButton>
                 </Form>
 
