@@ -21,21 +21,39 @@ export default class User extends Component {
 
     state = {
         stars: [],
-        loading: true
+        loading: true, //icone de loading
+        page: 1 //paginação
     }
 
     async componentDidMount() {
+        this.load();
+    }
+
+    load = async (page = 1 ) => {
         const { navigation } = this.props;
         const user = navigation.getParam('user');
 
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true
+        });
         
-        const response = await api.get(`/users/${user.login}/starred`); //acessar repositorios favoritados pelo usuario
+        const response = await api.get(`/users/${user.login}/starred`, { //acessar repositorios favoritados pelo usuario
+            params: { page } //paginação    
+        }); 
         
         this.setState({ 
             stars: response.data, 
-            loading: false 
+            loading: false,
+            page
         });
+    }
+
+    loadMore = () => {
+        const { page } = this.state;
+
+        const nextPage = page + 1;
+
+        this.load(nextPage);
     }
 
     render () {
@@ -58,6 +76,8 @@ export default class User extends Component {
                         <Stars 
                         data={stars}
                         keyExtractor={ star => String(star.id)}
+                        onEndReachedThreshold={0.2} // Carrega mais itens quando chegar em 20% do fim
+                        onEndReached={this.loadMore} // Função que carrega mais itens
                         renderItem={({ item }) => (
                            <Starred>
                                 <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
