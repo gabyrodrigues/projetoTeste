@@ -44,7 +44,8 @@ export default class User extends Component {
         this.setState({ 
             stars: response.data, 
             loading: false,
-            page
+            page,
+            refreshing: false //arrastar a listagem de repositórios favoritados pra baixo atualiza a lista resetando o estado
         });
     }
 
@@ -56,9 +57,15 @@ export default class User extends Component {
         this.load(nextPage);
     }
 
+    refreshList = () => {
+        this.setState({ refreshing: true });
+
+        this.load();
+    }
+
     render () {
         const { navigation } = this.props;
-        const { stars, loading } = this.state;
+        const { stars, loading, refreshing } = this.state;
 
         const user = navigation.getParam('user');
 
@@ -75,9 +82,11 @@ export default class User extends Component {
                     ) : ( 
                         <Stars 
                         data={stars}
-                        keyExtractor={ star => String(star.id)}
+                        keyExtractor={ star => String(star.id) }
                         onEndReachedThreshold={0.2} // Carrega mais itens quando chegar em 20% do fim
-                        onEndReached={this.loadMore} // Função que carrega mais itens
+                        onEndReached={ this.loadMore } // Função que carrega mais itens
+                        onRefresh={ this.refreshList } // Função dispara quando o usuário arrasta a lista pra baixo
+                        refreshing={ refreshing} // Variável que armazena um estado true/false que representa se a lista está atualizando
                         renderItem={({ item }) => (
                            <Starred>
                                 <OwnerAvatar source={{ uri: item.owner.avatar_url }} />
