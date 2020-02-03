@@ -11,7 +11,6 @@ import { Container, Form, Input,
         } from './styles';
 
 import api from '../../services/api'; //acessando api do github
-import { of } from 'rxjs';
 
 export default class Main extends Component {
     static navigationOptions = {

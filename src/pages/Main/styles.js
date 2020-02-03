@@ -4,7 +4,7 @@ import { RectButton } from 'react-native-gesture-handler';
 export const Container = styled.View`
     flex: 1;
     padding: 30px;
-    background: #333;
+    background-color: #333;
 `;
 
 export const Form = styled.View`
